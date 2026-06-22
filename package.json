@@ -37,7 +37,7 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "chokidar": "^4.0.3",
     "gray-matter": "^4.0.3",
-    "next": "15.3.5",
+    "next": "16.2.9",
     "pg": "^8.16.3",
     "prisma": "^6.13.0",
     "pusher": "^5.2.0",
@@ -53,7 +53,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.3.5",
+    "eslint-config-next": "16.2.9",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
