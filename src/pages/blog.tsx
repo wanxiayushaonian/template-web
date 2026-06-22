@@ -473,18 +473,24 @@ export default function Blog() {
 
   const [showToast, setShowToast] = React.useState(false);
 
-  // 渲染 Markdown 内容（简化版）
+  // 渲染 Markdown 内容（增强版）
   const renderMarkdown = (content: string) => {
     const lines = content.split("\n");
     const elements: JSX.Element[] = [];
     let inCodeBlock = false;
     let codeBlockContent = "";
     let codeLanguage = "";
-    let headingIndex = 0; // 添加标题计数器
+    let headingIndex = 0;
+    let elementIndex = 0;
+    let inList = false;
+    let listItems: JSX.Element[] = [];
+    let inTable = false;
+    let tableRows: JSX.Element[] = [];
+    let inBlockquote = false;
+    let blockquoteContent = "";
 
     // 复制代码功能
     const copyToClipboard = (text: string) => {
-      // 移除末尾的换行符
       const cleanText = text.replace(/\n$/, "");
       navigator.clipboard
         .writeText(cleanText)
@@ -499,18 +505,138 @@ export default function Blog() {
         });
     };
 
+    // 渲染内联 Markdown（加粗、行内代码、链接）
+    const renderInlineMarkdown = (text: string): JSX.Element[] => {
+      const parts: JSX.Element[] = [];
+      let remaining = text;
+      let key = 0;
+
+      while (remaining.length > 0) {
+        // 匹配行内代码
+        const inlineCodeMatch = remaining.match(/^`([^`]+)`/);
+        if (inlineCodeMatch) {
+          parts.push(
+            <code
+              key={key++}
+              className="bg-gray-800 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono"
+            >
+              {inlineCodeMatch[1]}
+            </code>
+          );
+          remaining = remaining.slice(inlineCodeMatch[0].length);
+          continue;
+        }
+
+        // 匹配加粗
+        const boldMatch = remaining.match(/^\*\*([^*]+)\*\*/);
+        if (boldMatch) {
+          parts.push(
+            <strong key={key++} className="font-bold text-white">
+              {boldMatch[1]}
+            </strong>
+          );
+          remaining = remaining.slice(boldMatch[0].length);
+          continue;
+        }
+
+        // 匹配链接
+        const linkMatch = remaining.match(/^\[([^\]]+)\]\(([^)]+)\)/);
+        if (linkMatch) {
+          parts.push(
+            <a
+              key={key++}
+              href={linkMatch[2]}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:text-blue-300 underline"
+            >
+              {linkMatch[1]}
+            </a>
+          );
+          remaining = remaining.slice(linkMatch[0].length);
+          continue;
+        }
+
+        // 普通文本（找到下一个特殊字符）
+        const nextSpecialIndex = remaining.search(/[`*\[]/);
+        if (nextSpecialIndex === -1) {
+          parts.push(<span key={key++}>{remaining}</span>);
+          break;
+        } else if (nextSpecialIndex === 0) {
+          // 特殊字符没有匹配到模式，当作普通文本
+          parts.push(<span key={key++}>{remaining[0]}</span>);
+          remaining = remaining.slice(1);
+        } else {
+          parts.push(
+            <span key={key++}>{remaining.slice(0, nextSpecialIndex)}</span>
+          );
+          remaining = remaining.slice(nextSpecialIndex);
+        }
+      }
+
+      return parts;
+    };
+
+    // 提交列表
+    const flushList = () => {
+      if (listItems.length > 0) {
+        elements.push(
+          <ul
+            key={`list-${elementIndex++}`}
+            className="list-disc list-inside mb-2 text-gray-300 space-y-0.5"
+          >
+            {listItems}
+          </ul>
+        );
+        listItems = [];
+        inList = false;
+      }
+    };
+
+    // 提交表格
+    const flushTable = () => {
+      if (tableRows.length > 0) {
+        elements.push(
+          <div key={`table-${elementIndex++}`} className="overflow-x-auto mb-3">
+            <table className="w-full text-gray-300 border-collapse">
+              <tbody>{tableRows}</tbody>
+            </table>
+          </div>
+        );
+        tableRows = [];
+        inTable = false;
+      }
+    };
+
+    // 提交引用块
+    const flushBlockquote = () => {
+      if (blockquoteContent) {
+        elements.push(
+          <blockquote
+            key={`quote-${elementIndex++}`}
+            className="border-l-4 border-gray-600 pl-3 italic text-gray-400 my-2"
+          >
+            {blockquoteContent.trim()}
+          </blockquote>
+        );
+        blockquoteContent = "";
+        inBlockquote = false;
+      }
+    };
+
     lines.forEach((line, index) => {
       // 代码块处理
       if (line.startsWith("```")) {
+        flushList();
+        flushTable();
+        flushBlockquote();
+
         if (!inCodeBlock) {
           inCodeBlock = true;
           codeBlockContent = "";
-          // 提取语言类型
           codeLanguage = line.replace("```", "").trim() || "plaintext";
         } else {
           inCodeBlock = false;
-
-          // 关键修复：为每个代码块创建独立的内容副本
           const currentCodeContent = codeBlockContent;
           const currentLanguage = codeLanguage;
 
@@ -519,7 +645,6 @@ export default function Blog() {
               key={`code-${index}`}
               className="bg-gray-900 rounded-lg my-4 overflow-hidden relative group"
             >
-              {/* 语言标签和复制按钮 */}
               <div className="flex justify-between items-center px-4 py-2 bg-gray-800 border-b border-gray-700">
                 <span className="text-xs text-gray-400 uppercase font-mono">
                   {currentLanguage}
@@ -550,8 +675,6 @@ export default function Blog() {
                   复制
                 </button>
               </div>
-
-              {/* 使用 SyntaxHighlighter 进行语法高亮 */}
               <SyntaxHighlighter
                 language={
                   currentLanguage === "plaintext" ? "text" : currentLanguage
@@ -575,7 +698,6 @@ export default function Blog() {
       }
 
       if (inCodeBlock) {
-        // 修复复制功能：正确拼接代码内容
         if (codeBlockContent === "") {
           codeBlockContent = line;
         } else {
@@ -584,54 +706,129 @@ export default function Blog() {
         return;
       }
 
-      // 标题处理 - 修复 ID 生成逻辑
+      // 引用块处理
+      if (line.startsWith("> ")) {
+        flushList();
+        flushTable();
+        inBlockquote = true;
+        blockquoteContent += line.slice(2) + " ";
+        return;
+      } else if (inBlockquote) {
+        flushBlockquote();
+      }
+
+      // 列表处理
+      if (line.match(/^[-*] /)) {
+        flushTable();
+        flushBlockquote();
+        inList = true;
+        const content = line.replace(/^[-*] /, "");
+        listItems.push(
+          <li key={index}>{renderInlineMarkdown(content)}</li>
+        );
+        return;
+      } else if (inList) {
+        flushList();
+      }
+
+      // 表格处理
+      if (line.includes("|") && line.trim().startsWith("|")) {
+        flushList();
+        flushBlockquote();
+
+        // 跳过分隔行
+        if (line.match(/^\|[\s-|]+\|$/)) {
+          return;
+        }
+
+        inTable = true;
+        const cells = line
+          .split("|")
+          .filter((cell) => cell.trim() !== "")
+          .map((cell) => cell.trim());
+
+        const isHeader = tableRows.length === 0;
+        tableRows.push(
+          <tr key={index} className={isHeader ? "bg-gray-800" : ""}>
+            {cells.map((cell, cellIndex) => (
+              <td
+                key={cellIndex}
+                className={`px-4 py-2 border border-gray-700 ${
+                  isHeader ? "font-bold text-white" : ""
+                }`}
+              >
+                {renderInlineMarkdown(cell)}
+              </td>
+            ))}
+          </tr>
+        );
+        return;
+      } else if (inTable) {
+        flushTable();
+      }
+
+      // 标题处理
       if (line.startsWith("# ")) {
-        const id = `heading-${headingIndex}`; // 使用计数器生成 ID
-        headingIndex++; // 递增计数器
+        const id = `heading-${headingIndex}`;
+        headingIndex++;
         elements.push(
           <h1
             key={index}
             id={id}
-            className="text-3xl font-bold mb-4 text-white mt-8 first:mt-0"
+            className="text-3xl font-bold mb-3 text-white mt-6 first:mt-0"
           >
-            {line.replace("# ", "")}
+            {renderInlineMarkdown(line.replace("# ", ""))}
           </h1>
         );
       } else if (line.startsWith("## ")) {
-        const id = `heading-${headingIndex}`; // 使用计数器生成 ID
-        headingIndex++; // 递增计数器
+        const id = `heading-${headingIndex}`;
+        headingIndex++;
         elements.push(
           <h2
             key={index}
             id={id}
-            className="text-2xl font-bold mb-3 text-white mt-6"
+            className="text-2xl font-bold mb-2 text-white mt-5"
           >
-            {line.replace("## ", "")}
+            {renderInlineMarkdown(line.replace("## ", ""))}
           </h2>
         );
       } else if (line.startsWith("### ")) {
-        const id = `heading-${headingIndex}`; // 使用计数器生成 ID
-        headingIndex++; // 递增计数器
+        const id = `heading-${headingIndex}`;
+        headingIndex++;
         elements.push(
           <h3
             key={index}
             id={id}
             className="text-xl font-bold mb-2 text-white mt-4"
           >
-            {line.replace("### ", "")}
+            {renderInlineMarkdown(line.replace("### ", ""))}
           </h3>
         );
       } else if (line.trim() && !line.startsWith("`")) {
         // 普通段落
         elements.push(
-          <p key={index} className="mb-4 text-gray-300 leading-relaxed">
-            {line}
+          <p key={index} className="mb-2 text-gray-300 leading-relaxed">
+            {renderInlineMarkdown(line)}
           </p>
         );
       } else if (!line.trim()) {
-        elements.push(<br key={index} />);
+        // 空行：只在段落之间添加小间距，不添加 <br>
+        if (elements.length > 0) {
+          const lastElement = elements[elements.length - 1];
+          // 如果上一个元素是段落，添加 margin 而不是 <br>
+          if (lastElement?.type === "p") {
+            // 段落已有 mb-4，不需要额外间距
+          } else {
+            elements.push(<div key={index} className="h-2" />);
+          }
+        }
       }
     });
+
+    // 处理末尾的列表、表格、引用块
+    flushList();
+    flushTable();
+    flushBlockquote();
 
     return elements;
   };
@@ -666,7 +863,7 @@ export default function Blog() {
   return (
     <>
       <Head>
-        <title>docs - wuxian&apos;s web</title>
+        <title>docs - liujinbao&apos;s web</title>
         <meta name="description" content="分享前端开发经验和技术文章" />
         <meta
           name="viewport"

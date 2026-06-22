@@ -59,7 +59,7 @@ export default function Home() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const fullText = "Hello, I'm wuxian";
+  const fullText = "Hello, I'm liujinbao";
 
   // 打字机动画效果
   useEffect(() => {
@@ -129,7 +129,7 @@ export default function Home() {
 
   // 添加GitHub和QQ点击处理函数
   const handleGithubClick = () => {
-    window.open("https://github.com/996wuxian", "_blank");
+    window.open("https://github.com/wanxiayushaonian", "_blank");
   };
 
   const handleQQClick = () => {
@@ -146,49 +146,16 @@ export default function Home() {
 
   const tags = [
     {
-      name: "做饭",
+      name: "瞎捣鼓",
     },
     {
-      name: "摄影",
+      name: "爱研究",
     },
     {
-      name: "五哈",
-    },
-    {
-      name: "美食",
-    },
-    {
-      name: "沧元图",
+      name: "看论文",
     },
     {
       name: "音乐",
-    },
-    {
-      name: "蜡笔小新",
-    },
-    {
-      name: "英雄联盟手游",
-    },
-    {
-      name: "天空中的歌",
-    },
-    {
-      name: "鲜花",
-    },
-    {
-      name: "枕刀歌",
-    },
-    {
-      name: "镖人",
-    },
-    {
-      name: "不良人",
-    },
-    {
-      name: "不良人天罡传",
-    },
-    {
-      name: "鬼灭之刃",
     },
   ];
 
@@ -197,8 +164,8 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>首页 - wuxian&apos;s web</title>
-        <meta name="description" content="wuxian的个人网站首页" />
+        <title>首页 - liujinbao&apos;s web</title>
+        <meta name="description" content="liujinbao的个人网站首页" />
       </Head>
       <div className="relative">
         {/* 弹窗组件 */}
@@ -263,7 +230,7 @@ export default function Home() {
                 <div className="text-[28px] md:text-[40px] font-bold text-[#fff] text-shadow-sm">
                   <span className="inline-block">
                     {displayText.split(" ").map((word, wordIndex) => {
-                      if (word === "wuxian") {
+                      if (word === "liujinbao") {
                         return (
                           <span
                             key={wordIndex}
@@ -287,21 +254,21 @@ export default function Home() {
                 </div>
                 <div className="text-shadow-sm text-[#fff] text-[14px] md:text-[16px]">
                   <span className="bg-gradient-to-br from-[#1b2c55] to-[#3d85a9] bg-clip-text text-transparent text-[16px] md:text-[18px]">
-                    Front-end
+                    Student
                   </span>{" "}
-                  development (前端开发工程师)
+                  (在读学生)
                 </div>
                 <div className="text-shadow-sm text-[#fff] text-[14px] md:text-[16px]">
                   <span className="bg-gradient-to-br from-[#1b2c55] to-[#3d85a9] bg-clip-text text-transparent text-[16px] md:text-[18px]">
-                    25
+                    21
                   </span>{" "}
-                  years old (25岁)
+                  years old (21岁)
                 </div>
                 <div className="text-shadow-sm text-[#fff] text-[14px] md:text-[16px]">
                   <span className="bg-gradient-to-br from-[#1b2c55] to-[#3d85a9] bg-clip-text text-transparent text-[16px] md:text-[18px]">
-                    2.5
+                    AI
                   </span>{" "}
-                  work experience (2.5年工作经验)
+                  enthusiast (AI 爱好者)
                 </div>
                 <div className="flex mt-[10px] gap-[10px] justify-center md:justify-start">
                   <div
@@ -339,7 +306,7 @@ export default function Home() {
                           height={20}
                           color="#fff"
                         />
-                        广州番禺区
+                        杭州
                       </div>
                       <div className="flex items-center gap-[5px]">
                         <SvgIcon
@@ -348,7 +315,7 @@ export default function Home() {
                           height={20}
                           color="#fff"
                         />
-                        在职
+                        在校
                       </div>
                     </div>
                     <div className="bg-[rgba(0,0,0,.3)] rounded-[5px] p-[10px] text-[#fff] text-[14px] gap-[10px] flex flex-col flex-1">
@@ -359,7 +326,7 @@ export default function Home() {
                           height={20}
                           color="#fff"
                         />
-                        广西
+                        杭州
                       </div>
                       <div className="flex items-center gap-[5px]">
                         <SvgIcon
@@ -423,7 +390,7 @@ export default function Home() {
               <div className="flex flex-col gap-[10px] order-1 md:order-2 w-full md:w-auto">
                 {/* GitHub贡献热力图 */}
                 <div className="w-full overflow-x-auto">
-                  <GitHubHeatmap username="996wuxian" year={2025} />
+                  <GitHubHeatmap username="wanxiayushaonian" year={2026} />
                 </div>
 
                 <div className="bg-[rgba(0,0,0,.3)] rounded-[5px] p-[10px] text-[#fff] text-[14px] gap-[10px] flex flex-col">
@@ -479,6 +446,21 @@ export default function Home() {
                         />
                       </div>
                       <span className="text-[12px]">实时聊天交流</span>
+                    </Link>
+                    <Link
+                      href="/about"
+                      className="bg-[rgba(0,0,0,.3)] rounded-[5px] p-[10px] text-[#fff] text-[14px] gap-[10px] flex flex-col cursor-pointer flex-1"
+                    >
+                      <div className="flex justify-between items-center">
+                        关于
+                        <SvgIcon
+                          name="home"
+                          width={25}
+                          height={25}
+                          color="#fff"
+                        />
+                      </div>
+                      <span className="text-[12px]">个人介绍</span>
                     </Link>
                   </div>
                   <div className="text-[12px] md:text-[14px]">

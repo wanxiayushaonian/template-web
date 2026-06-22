@@ -189,15 +189,15 @@ export function filterProfanity(text: string): string {
 }
 
 /**
- * 验证昵称是否合法（不能是wuxian且不能包含不文明词汇）
+ * 验证昵称是否合法（不能是liujinbao且不能包含不文明词汇）
  * @param nickname 昵称
  * @returns 是否合法
  */
 export function isValidNickname(nickname: string): boolean {
   const trimmedNickname = nickname.trim().toLowerCase();
 
-  // 检查是否为wuxian
-  if (trimmedNickname === "wuxian") {
+  // 检查是否为liujinbao
+  if (trimmedNickname === "liujinbao") {
     return false;
   }
 
@@ -216,5 +216,5 @@ export function isValidNickname(nickname: string): boolean {
  */
 export function isAuthor(nickname: string): boolean {
   const trimmedNickname = nickname.trim().toLowerCase();
-  return trimmedNickname === "wuxian";
+  return trimmedNickname === "liujinbao";
 }

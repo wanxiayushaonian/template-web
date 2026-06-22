@@ -91,7 +91,7 @@ const LoadingAnimation: React.FC<LoadingAnimationProps> = ({ isVisible }) => {
           </defs>
         </svg>
 
-        {/* W */}
+        {/* L */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -105,51 +105,9 @@ const LoadingAnimation: React.FC<LoadingAnimationProps> = ({ isVisible }) => {
             strokeLinecap="round"
             strokeWidth="8"
             stroke="url(#b)"
-            d="M 4,8 L 16,48 L 28,12 L 40,48 L 52,8"
+            d="M 12,8 L 12,52 L 44,52"
             className="dash"
-            id="w"
-            pathLength="360"
-          />
-        </svg>
-
-        {/* U */}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 64 64"
-          height="64"
-          width="64"
-          className="inline-block"
-        >
-          <path
-            strokeLinejoin="round"
-            strokeLinecap="round"
-            strokeWidth="8"
-            stroke="url(#c)"
-            d="M 12,8 L 12,40 Q 12,52 24,52 L 40,52 Q 52,52 52,40 L 52,8"
-            className="dash"
-            id="u1"
-            pathLength="360"
-          />
-        </svg>
-
-        {/* X */}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 64 64"
-          height="64"
-          width="64"
-          className="inline-block"
-        >
-          <path
-            strokeLinejoin="round"
-            strokeLinecap="round"
-            strokeWidth="8"
-            stroke="url(#d)"
-            d="M 12,12 L 52,52 M 52,12 L 12,52"
-            className="dash"
-            id="x"
+            id="l"
             pathLength="360"
           />
         </svg>
@@ -167,15 +125,57 @@ const LoadingAnimation: React.FC<LoadingAnimationProps> = ({ isVisible }) => {
             strokeLinejoin="round"
             strokeLinecap="round"
             strokeWidth="8"
-            stroke="url(#e)"
-            d="M 20,12 L 44,12 M 32,12 L 32,52 M 20,52 L 44,52"
+            stroke="url(#c)"
+            d="M 20,8 L 44,8 M 32,8 L 32,52 M 20,52 L 44,52"
             className="dash"
-            id="i"
+            id="i1"
             pathLength="360"
           />
         </svg>
 
-        {/* A */}
+        {/* U */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 64 64"
+          height="64"
+          width="64"
+          className="inline-block"
+        >
+          <path
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            strokeWidth="8"
+            stroke="url(#d)"
+            d="M 12,8 L 12,40 Q 12,52 24,52 L 40,52 Q 52,52 52,40 L 52,8"
+            className="dash"
+            id="u"
+            pathLength="360"
+          />
+        </svg>
+
+        {/* J */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 64 64"
+          height="64"
+          width="64"
+          className="inline-block"
+        >
+          <path
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            strokeWidth="8"
+            stroke="url(#e)"
+            d="M 36,8 L 36,40 Q 36,52 24,52 L 16,52 Q 8,52 8,44"
+            className="dash"
+            id="j"
+            pathLength="360"
+          />
+        </svg>
+
+        {/* I */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -189,9 +189,9 @@ const LoadingAnimation: React.FC<LoadingAnimationProps> = ({ isVisible }) => {
             strokeLinecap="round"
             strokeWidth="8"
             stroke="url(#f)"
-            d="M 12,52 L 32,12 L 52,52 M 20,36 L 44,36"
+            d="M 20,8 L 44,8 M 32,8 L 32,52 M 20,52 L 44,52"
             className="dash"
-            id="a"
+            id="i2"
             pathLength="360"
           />
         </svg>
@@ -210,9 +210,72 @@ const LoadingAnimation: React.FC<LoadingAnimationProps> = ({ isVisible }) => {
             strokeLinecap="round"
             strokeWidth="8"
             stroke="url(#g)"
-            d="M 12,52 L 12,12 L 52,52 L 52,12"
+            d="M 12,52 L 12,8 L 52,52 L 52,8"
             className="dash"
             id="n"
+            pathLength="360"
+          />
+        </svg>
+
+        {/* B */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 64 64"
+          height="64"
+          width="64"
+          className="inline-block"
+        >
+          <path
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            strokeWidth="8"
+            stroke="url(#b)"
+            d="M 12,8 L 12,52 M 12,8 L 36,8 Q 52,8 52,20 Q 52,32 36,32 L 12,32 M 12,32 L 40,32 Q 56,32 56,44 Q 56,52 40,52 L 12,52"
+            className="dash"
+            id="b"
+            pathLength="360"
+          />
+        </svg>
+
+        {/* A */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 64 64"
+          height="64"
+          width="64"
+          className="inline-block"
+        >
+          <path
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            strokeWidth="8"
+            stroke="url(#c)"
+            d="M 12,52 L 32,8 L 52,52 M 20,36 L 44,36"
+            className="dash"
+            id="a"
+            pathLength="360"
+          />
+        </svg>
+
+        {/* O */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 64 64"
+          height="64"
+          width="64"
+          className="inline-block"
+        >
+          <path
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            strokeWidth="8"
+            stroke="url(#d)"
+            d="M 32,8 Q 52,8 52,32 Q 52,52 32,52 Q 12,52 12,32 Q 12,8 32,8"
+            className="dash"
+            id="o"
             pathLength="360"
           />
         </svg>

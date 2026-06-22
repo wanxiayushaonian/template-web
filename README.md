@@ -113,7 +113,7 @@ pnpm 版本: 8.8.0
   - 经历数据。
 
 - GitHubHeatmap 使用说明：
-  - `GitHubHeatmap username="996wuxian" year={2025}`
+  - `GitHubHeatmap username="wanxiayushaonian" year={2026}`
   - 热力图只需要在这替换你的 username 即可
 
 ## vercel 部署说明

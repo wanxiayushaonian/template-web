@@ -4,7 +4,7 @@
   "private": true,
   "author": {
     "name": "wuxian",
-    "url": "https://github.com/996wuxian"
+    "url": "https://github.com/wanxiayushaonian"
   },
   "license": "MIT",
   "keywords": [
@@ -12,13 +12,13 @@
     "react",
     "typescript"
   ],
-  "homepage": "https://github.com/996wuxian/template-web",
+  "homepage": "https://github.com/wanxiayushaonian/template-web",
   "repository": {
     "type": "git",
-    "url": "https://github.com/996wuxian/template-web.git"
+    "url": "https://github.com/wanxiayushaonian/template-web.git"
   },
   "bugs": {
-    "url": "https://github.com/996wuxian/template-web/issues"
+    "url": "https://github.com/wanxiayushaonian/template-web/issues"
   },
   "scripts": {
     "count": "node scripts/generate-count.js",
