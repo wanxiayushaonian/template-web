@@ -104,13 +104,4 @@ export const worksData: WorkItem[] = [
       },
     ],
   },
-  {
-    title: "liujinbao's web",
-    description:
-      "基于Next.js开发的个人介绍网站，简单介绍了我自己个儿，歌和视频都很有品！！！！。",
-    image: "/images/work1.jpg",
-    tech: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
-    link: "#",
-    features: ["个人介绍", "作品集", "喜好", "留言"],
-  },
 ];
