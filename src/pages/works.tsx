@@ -18,6 +18,7 @@ const geistMono = Geist_Mono({
 
 interface WorkFunction {
   name: string;
+  description?: string;
   img1?: string;
   img2?: string;
   img3?: string;
@@ -255,6 +256,13 @@ export default function Works() {
                             <h4 className="text-sm md:text-base font-medium text-white">
                               {func.name}
                             </h4>
+
+                            {/* 功能描述 */}
+                            {func.description && (
+                              <p className="text-[rgba(255,255,255,0.7)] leading-relaxed text-xs md:text-sm">
+                                {func.description}
+                              </p>
+                            )}
 
                             {/* 媒体展示区域 - 单行显示 */}
                             <div className="flex gap-2 md:gap-4 overflow-x-auto pb-2">
