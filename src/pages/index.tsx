@@ -469,40 +469,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-
-            {/* 小工具区域 */}
-            <div className="mt-[20px] px-4 md:px-0">
-              <div className="bg-[rgba(0,0,0,.3)] rounded-[5px] p-[10px] text-[#fff] text-[14px] gap-[10px] flex flex-col">
-                <div className="font-bold text-[16px] flex items-center gap-[5px]">
-                  <SvgIcon name="site" width={20} height={20} color="#fff" />
-                  <div className="flex flex-col">
-                    Tools
-                    <span className="text-[11px] font-[400]">小工具</span>
-                  </div>
-                </div>
-                <div className="flex gap-[10px]">
-                  <a
-                    href="/games/2048"
-                    target="_blank"
-                    className="bg-[rgba(0,0,0,.3)] rounded-[5px] p-[10px] text-[#fff] text-[14px] gap-[10px] flex flex-col cursor-pointer flex-1 hover:bg-[rgba(255,255,255,.1)] transition-all duration-200 transform hover:scale-[1.02]"
-                  >
-                    <div className="flex justify-between items-center">
-                      <span className="flex items-center gap-2">
-                        <span className="text-[20px]">🎮</span>
-                        2048
-                      </span>
-                      <SvgIcon
-                        name="right"
-                        width={20}
-                        height={20}
-                        color="#fff"
-                      />
-                    </div>
-                    <span className="text-[12px]">经典数字合并游戏，多种模式</span>
-                  </a>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* 滚动到作品页按钮 */}
@@ -515,6 +481,20 @@ export default function Home() {
               <SvgIcon name="right" width={20} height={20} color="#fff" />
             </Link>
           </div>
+
+          {/* 彩蛋悬浮按钮 */}
+          <a
+            href="/games/2048"
+            target="_blank"
+            className="fixed bottom-8 left-8 z-10 group"
+          >
+            <div className="relative w-[45px] h-[45px] rounded-full border-[3px] border-[#1b2c55] shadow-[3px_3px_0px_0px_rgba(27,44,85,0.8)] bg-gradient-to-br from-[#FFE600] to-[#FF8C42] cursor-pointer transition-all duration-300 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_0px_rgba(27,44,85,0.8)] hover:rotate-12 active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0px_0px_rgba(27,44,85,0.8)]">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-[15px] h-[15px] border-[3px] border-[#1b2c55] rounded-sm transform group-hover:rotate-45 transition-transform duration-300"></div>
+              </div>
+              <div className="absolute -top-1 -right-1 w-[12px] h-[12px] bg-[#FF4757] rounded-full border-[2px] border-[#1b2c55] animate-pulse"></div>
+            </div>
+          </a>
         </div>
       </div>
     </>
