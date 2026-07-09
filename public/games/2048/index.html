@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2048 ULTRA - NEO-BRUTALISM</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'brutal-yellow': '#FFE600',
+            'brutal-pink': '#FF6B9D',
+            'brutal-blue': '#4D9DE0',
+            'brutal-green': '#7FD858',
+            'brutal-orange': '#FF8C42',
+            'brutal-purple': '#9B5DE5',
+            'brutal-red': '#FF4757',
+            'brutal-cyan': '#00BBF9',
+            'brutal-bg': '#F0F0E8',
+            'brutal-dark': '#1A1A1A',
+            'brutal-gray': '#E0E0D8',
+          },
+          fontFamily: {
+            'display': ['"Archivo Black"', 'sans-serif'],
+            'mono': ['"Space Mono"', 'monospace'],
+            'body': ['"Space Grotesk"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="text-brutal-dark">
+
+<div class="noise-bg"></div>
+
+<!-- 装饰元素 -->
+<div class="decoration" style="top: 5%; left: 3%; font-size: 2rem; color: #FFE600; font-family: 'Archivo Black'; transform: rotate(-15deg); text-shadow: 2px 2px 0px #1A1A1A;">★</div>
+<div class="decoration" style="top: 10%; right: 5%; font-size: 1.5rem; color: #FF4757; font-family: 'Archivo Black'; transform: rotate(10deg);">ULTRA!</div>
+<div class="decoration" style="bottom: 15%; left: 2%; font-size: 1.8rem; color: #7FD858; font-family: 'Archivo Black'; transform: rotate(20deg); text-shadow: 2px 2px 0px #1A1A1A;">✦</div>
+
+<!-- 成就通知容器 -->
+<div id="achievement-container"></div>
+
+<!-- 主容器 -->
+<div id="main-container" class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 relative z-10">
+
+  <!-- 顶部标题区域 -->
+  <header class="w-full max-w-2xl mb-6 text-center relative">
+    <div class="flex items-center justify-center gap-2 mb-3 flex-wrap">
+      <span class="brutal-tag" style="background: #FF4757; color: #FFFFFF;">v3.0</span>
+      <span class="brutal-tag" style="background: #9B5DE5; color: #FFFFFF;">ULTRA</span>
+      <span class="brutal-tag blink" style="background: #7FD858;">NEW!</span>
+    </div>
+    <h1 class="font-display text-5xl sm:text-7xl mb-2" style="letter-spacing: -2px; line-height: 0.9; text-shadow: 4px 4px 0px #1A1A1A;">
+      <span style="color: #FFE600;">20</span><span style="color: #FF4757;">48</span>
+    </h1>
+    <p class="font-mono text-sm font-bold uppercase tracking-widest text-brutal-dark/70">
+      ▸ ULTRA EDITION · COMBO · POWERS · CHAOS ◂
+    </p>
+  </header>
+
+  <!-- 游戏模式切换 -->
+  <div class="w-full max-w-md mb-4">
+    <div class="brutal-card p-3">
+      <div class="flex items-center justify-between gap-2 flex-wrap">
+        <span class="font-mono text-xs font-bold uppercase">▸ MODE:</span>
+        <div class="flex gap-1 flex-wrap">
+          <button class="mode-btn active" data-mode="classic">CLASSIC</button>
+          <button class="mode-btn" data-mode="chaos">CHAOS</button>
+          <button class="mode-btn" data-mode="zen">ZEN</button>
+          <button class="mode-btn" data-mode="time">TIME</button>
+          <button class="mode-btn" data-mode="gravity">GRAVITY</button>
+          <button class="mode-btn" data-mode="levels">LEVELS</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 分数面板 -->
+  <div class="w-full max-w-md grid grid-cols-3 gap-3 mb-4">
+    <div class="brutal-card p-3 text-center relative">
+      <div class="font-mono text-[10px] font-bold uppercase tracking-wider text-brutal-dark/60 mb-1">▸ SCORE</div>
+      <div id="score" class="text-2xl font-display">0</div>
+    </div>
+    <div class="brutal-card p-3 text-center relative" style="background: #FFE600;">
+      <div class="font-mono text-[10px] font-bold uppercase tracking-wider text-brutal-dark/60 mb-1">▸ BEST</div>
+      <div id="best-score" class="text-2xl font-display">0</div>
+    </div>
+    <div class="brutal-card p-3 text-center relative" style="background: #FF4757; color: white;">
+      <div class="font-mono text-[10px] font-bold uppercase tracking-wider text-white/80 mb-1">▸ COMBO</div>
+      <div id="combo-count" class="text-2xl font-display">x1</div>
+    </div>
+  </div>
+
+  <!-- 计时器面板（限时模式显示） -->
+  <div id="timer-panel" class="w-full max-w-md mb-4 hidden">
+    <div class="brutal-card p-3" style="background: #1A1A1A; color: #FFE600;">
+      <div class="flex items-center justify-between">
+        <span class="font-mono text-xs font-bold uppercase">▸ TIME LEFT</span>
+        <span id="timer-display" class="text-3xl font-display">60</span>
+      </div>
+      <div class="mt-2 h-3 bg-brutal-gray border-2 border-brutal-dark overflow-hidden">
+        <div id="timer-bar" class="h-full transition-all duration-1000" style="width: 100%; background: linear-gradient(90deg, #FF4757, #FFE600, #7FD858);"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 玩家昵称 -->
+  <div class="w-full max-w-md mb-4">
+    <div class="brutal-card p-3" style="background: #1A1A1A; color: #FFE600;">
+      <div class="flex items-center gap-2">
+        <span class="font-mono text-xs font-bold uppercase">▸ PLAYER:</span>
+        <input id="nickname-input" type="text" class="flex-1 px-2 py-1 text-xs font-mono" style="background: #333; color: #FFF; border: 2px solid #FFE600;" placeholder="输入昵称" maxlength="20">
+        <button id="save-nickname-btn" class="brutal-btn px-3 py-1 text-xs" style="background: #7FD858; color: #1A1A1A;">
+          <i class="fas fa-check"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 道具栏 -->
+  <div class="w-full max-w-md mb-4">
+    <div class="brutal-card p-3">
+      <div class="flex items-center justify-between gap-2">
+        <span class="font-mono text-xs font-bold uppercase">▸ POWERS:</span>
+        <div class="flex gap-2">
+          <button id="undo-btn" class="brutal-btn px-3 py-2 text-xs flex items-center gap-1" style="background: #4D9DE0; color: #1A1A1A;" disabled>
+            <i class="fas fa-undo"></i>
+            <span>UNDO <span id="undo-count">(3)</span></span>
+          </button>
+          <button id="bomb-btn" class="brutal-btn px-3 py-2 text-xs flex items-center gap-1" style="background: #FF4757; color: #FFFFFF;" disabled>
+            <i class="fas fa-bomb"></i>
+            <span>BOMB <span id="bomb-count">(2)</span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 关卡选择面板（关卡模式显示） -->
+  <div id="level-panel" class="w-full max-w-md mb-4 hidden">
+    <div class="brutal-card p-3" style="background: #9B5DE5; color: #FFFFFF;">
+      <div class="flex items-center justify-between mb-2">
+        <span class="font-mono text-xs font-bold uppercase">▸ SELECT LEVEL</span>
+        <span id="level-info" class="font-mono text-xs">Level 1/8</span>
+      </div>
+      <div class="grid grid-cols-4 gap-2" id="level-grid">
+        <!-- 关卡按钮由JS生成 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 游戏主区域 -->
+  <div class="w-full max-w-md mb-5">
+    <div class="brutal-card p-4 sm:p-5" style="background: #FFFFFF;">
+      <!-- 游戏信息栏 -->
+      <div class="flex items-center justify-between mb-4 pb-3 border-b-2 border-dashed border-brutal-dark">
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 bg-brutal-green border-2 border-brutal-dark"></div>
+          <span class="font-mono text-xs font-bold uppercase" id="status-text">SYSTEM_READY</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="font-mono text-xs font-bold" id="move-count">MOVES: 0</span>
+          <button id="new-game-btn" class="brutal-btn px-3 py-1.5 text-xs flex items-center gap-1" style="background: #1A1A1A; color: #FFE600;">
+            <i class="fas fa-redo-alt"></i>
+            <span>NEW</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 目标进度条 -->
+      <div class="mb-4">
+        <div class="flex justify-between items-center mb-1">
+          <span class="font-mono text-[10px] font-bold uppercase">▸ PROGRESS TO 2048</span>
+          <span class="font-mono text-[10px] font-bold" id="progress-text">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div id="progress-fill" class="progress-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- 游戏网格容器 -->
+      <div class="relative">
+        <div id="game-board" class="game-grid p-3 relative" style="aspect-ratio: 1;">
+          <div id="grid-background" class="grid grid-cols-4 gap-2 h-full"></div>
+          <div id="tiles-container" class="absolute inset-3 pointer-events-none"></div>
+        </div>
+
+        <!-- 游戏结束/胜利遮罩 -->
+        <div id="game-overlay" class="game-overlay">
+          <div id="overlay-icon" class="text-7xl mb-4"></div>
+          <div id="overlay-title" class="text-4xl font-display mb-3" style="text-shadow: 3px 3px 0px #FFE600;"></div>
+          <div id="overlay-message" class="font-mono text-sm mb-6 text-center px-4 text-white"></div>
+          <div id="overlay-stats" class="font-mono text-xs mb-6 text-center px-4 text-white/70"></div>
+          <div class="flex gap-3 flex-wrap justify-center">
+            <button id="continue-btn" class="brutal-btn px-6 py-3 hidden" style="background: #7FD858;">
+              <i class="fas fa-forward mr-2"></i>CONTINUE
+            </button>
+            <button id="restart-btn" class="brutal-btn px-6 py-3" style="background: #FFE600;">
+              <i class="fas fa-redo-alt mr-2"></i>RESTART
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 控制说明和方向键 -->
+  <div class="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+    <!-- 操作说明 -->
+    <div class="brutal-card p-4" style="background: #FFFFFF;">
+      <h3 class="font-display text-lg mb-3 flex items-center gap-2 border-b-2 border-brutal-dark pb-2">
+        <span style="color: #FF4757;">▸</span>
+        FEATURES
+      </h3>
+      <ul class="space-y-2 text-xs font-mono">
+        <li class="flex items-start gap-2">
+          <span class="font-bold" style="color: #4D9DE0;">[01]</span>
+          <span><b>COMBO</b> - 连续合并获得倍数加成</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="font-bold" style="color: #FF4757;">[02]</span>
+          <span><b>BOMB</b> - 炸毁任意方块</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="font-bold" style="color: #9B5DE5;">[03]</span>
+          <span><b>UNDO</b> - 撤销上一步操作</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="font-bold" style="color: #7FD858;">[04]</span>
+          <span><b>CHAOS</b> - 随机特殊方块模式</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="font-bold" style="color: #FF8C42;">[05]</span>
+          <span><b>ZEN</b> - 无限撤销休闲模式</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="font-bold" style="color: #FF4757;">[06]</span>
+          <span><b>TIME</b> - 60秒限时挑战，合成高级方块加时</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="font-bold" style="color: #00BBF9;">[07]</span>
+          <span><b>FREEZE</b> - 冻结空格3回合</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="font-bold" style="color: #FF8C42;">[08]</span>
+          <span><b>ROW CLEAR</b> - 消除整行</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="font-bold" style="color: #9B5DE5;">[09]</span>
+          <span><b>COL CLEAR</b> - 消除整列</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="font-bold" style="color: #7FD858;">[10]</span>
+          <span><b>MERGE ALL</b> - 合并所有相同方块</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="font-bold" style="color: #4D9DE0;">[11]</span>
+          <span><b>GRAVITY</b> - 方块受重力下落，自动合并</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="font-bold" style="color: #9B5DE5;">[12]</span>
+          <span><b>LEVELS</b> - 8个预设关卡，挑战不同目标</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 方向键 -->
+    <div class="brutal-card p-4 flex flex-col items-center justify-center" style="background: #FFE600;">
+      <h3 class="font-display text-lg mb-3 flex items-center gap-2 border-b-2 border-brutal-dark pb-2 w-full justify-center">
+        <span>▸</span>
+        CONTROLS
+      </h3>
+      <div class="grid grid-cols-3 gap-2 w-36">
+        <div></div>
+        <button class="dpad-btn py-3 flex items-center justify-center" data-dir="up">
+          <i class="fas fa-chevron-up text-lg"></i>
+        </button>
+        <div></div>
+        <button class="dpad-btn py-3 flex items-center justify-center" data-dir="left">
+          <i class="fas fa-chevron-left text-lg"></i>
+        </button>
+        <div class="flex items-center justify-center">
+          <div class="w-3 h-3 bg-brutal-dark"></div>
+        </div>
+        <button class="dpad-btn py-3 flex items-center justify-center" data-dir="right">
+          <i class="fas fa-chevron-right text-lg"></i>
+        </button>
+        <div></div>
+        <button class="dpad-btn py-3 flex items-center justify-center" data-dir="down">
+          <i class="fas fa-chevron-down text-lg"></i>
+        </button>
+        <div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主题选择面板 -->
+  <div class="w-full max-w-md mb-4">
+    <div class="brutal-card p-4" style="background: #FFFFFF;">
+      <h3 class="font-display text-lg mb-3 flex items-center gap-2 border-b-2 border-brutal-dark pb-2">
+        <span style="color: #9B5DE5;">▸</span>
+        THEMES
+      </h3>
+      <div class="grid grid-cols-5 gap-2" id="theme-grid">
+        <!-- 主题按钮由JS生成 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 成就面板 -->
+  <div class="w-full max-w-md mb-4">
+    <div class="brutal-card p-4" style="background: #1A1A1A; color: #FFE600;">
+      <h3 class="font-display text-lg mb-3 flex items-center gap-2 border-b-2 border-brutal-yellow pb-2">
+        <span style="color: #FF4757;">▸</span>
+        ACHIEVEMENTS
+        <span id="achievement-count" class="ml-auto text-sm font-mono">0/8</span>
+      </h3>
+      <div id="achievements-grid" class="grid grid-cols-4 gap-2">
+        <!-- 成就由JS生成 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 排行榜面板 -->
+  <div class="w-full max-w-md mb-4">
+    <div class="brutal-card p-4" style="background: #1A1A1A; color: #FFE600;">
+      <h3 class="font-display text-lg mb-3 flex items-center gap-2 border-b-2 border-brutal-yellow pb-2">
+        <span style="color: #FF4757;">▸</span>
+        LEADERBOARD
+        <button id="clear-records-btn" class="ml-auto text-xs font-mono px-2 py-1" style="background: #FF4757; color: white; border: 2px solid #FF4757;">CLEAR</button>
+      </h3>
+      <div id="leaderboard-list" class="space-y-2 max-h-48 overflow-y-auto">
+        <!-- 记录由JS生成 -->
+      </div>
+      <div id="no-records" class="text-center text-xs opacity-50 py-4">
+        暂无记录，开始游戏吧！
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部信息 -->
+  <footer class="text-center font-mono text-xs">
+    <div class="brutal-card px-4 py-2 inline-block" style="background: #1A1A1A; color: #FFE600;">
+      <span class="font-bold">▸ 2048 ULTRA · NEO-BRUTALISM EDITION ◂</span>
+    </div>
+  </footer>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

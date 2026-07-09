@@ -60,3 +60,21 @@ model Message {
   
   @@map("messages")
 }
+
+// 2048游戏排行榜
+model GameRecord {
+  id          Int      @id @default(autoincrement())
+  nickname    String                                     // 玩家昵称
+  score       Int                                         // 得分
+  moves       Int                                         // 步数
+  maxTile     Int                                         // 最大方块
+  maxCombo    Int      @default(0)                       // 最大连击
+  gameMode    String                                     // 游戏模式
+  levelId     Int?                                        // 关卡ID（关卡模式）
+  duration    Int?                                        // 游戏时长（秒）
+  createdAt   DateTime @default(now())
+  
+  @@index([score(sort: Desc)])                           // 按分数索引
+  @@index([createdAt(sort: Desc)])                        // 按时间索引
+  @@map("game_records")
+}
