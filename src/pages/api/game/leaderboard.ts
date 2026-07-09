@@ -1,12 +1,28 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient()
+// 检查数据库是否配置
+const isDbConfigured = process.env.DATABASE_URL && 
+  !process.env.DATABASE_URL.includes('your-connection-string')
+
+let prisma: any = null
+
+if (isDbConfigured) {
+  const { PrismaClient } = await import('@prisma/client')
+  prisma = new PrismaClient()
+}
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // 如果数据库未配置，返回空数据
+  if (!isDbConfigured || !prisma) {
+    if (req.method === 'GET') {
+      return res.status(200).json({ records: [], message: 'Database not configured' })
+    }
+    return res.status(503).json({ error: 'Database not configured. Please set up DATABASE_URL in .env' })
+  }
+
   if (req.method === 'GET') {
     // 获取排行榜
     try {
@@ -82,26 +98,6 @@ export default async function handler(
     } catch (error) {
       console.error('Failed to create record:', error)
       return res.status(500).json({ error: 'Failed to create record' })
-    }
-  }
-  
-  if (req.method === 'DELETE') {
-    // 删除记录（管理员功能）
-    try {
-      const { id } = req.query
-      
-      if (!id) {
-        return res.status(400).json({ error: 'Missing record id' })
-      }
-      
-      await prisma.gameRecord.delete({
-        where: { id: parseInt(id as string) }
-      })
-      
-      return res.status(200).json({ success: true })
-    } catch (error) {
-      console.error('Failed to delete record:', error)
-      return res.status(500).json({ error: 'Failed to delete record' })
     }
   }
   

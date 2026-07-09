@@ -1315,8 +1315,16 @@ function applyTheme(themeId) {
     gameGrid.style.borderColor = theme.colors.dark;
   }
   
-  // 刷新主题按钮样式
-  initThemes();
+  // 刷新主题按钮样式（不调用initThemes避免递归）
+  const themeBtns = themeGridEl.querySelectorAll('button');
+  themeBtns.forEach((btn, index) => {
+    const t = themeList[index];
+    if (t) {
+      btn.style.background = currentTheme === t.id ? t.colors.yellow : t.colors.bg;
+      btn.style.color = t.colors.dark;
+      btn.style.borderColor = t.colors.dark;
+    }
+  });
 }
 
 // ============ 特效 ============
